@@ -6,21 +6,50 @@ public class Comer : MonoBehaviour
 {
     public Text puntaje;
     public Text vidas;
+    public AudioClip eatFishClip;
+    public AudioClip eatFoodClip;
+    public float volume;
 
+    AudioSource source;
     int puntos;
     int vida;
+    int valor;
+    void Start()
+    {
+        puntos = 0;
+        valor = 1;
+        actPuntos();
+    }
+
+    void Awake()
+    {
+        source = GetComponent<AudioSource>();
+    }
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag == "Food")
         {
-            puntos = int.Parse(puntaje.text.Substring(9)) + 1;
-            puntaje.text = "Puntaje: " + puntos;
+            source.PlayOneShot(eatFoodClip, volume);
+            puntos += valor;
+            actPuntos();
         }
-        else
+        else if(other.gameObject.tag == "Fish")
         {
-            vida = int.Parse(vidas.text .Substring(7)) - 1;
-            vidas.text = "Vidas: " + vida;
+            source.PlayOneShot(eatFishClip, volume);
+            vida = int.Parse(vidas.text.Substring(7)) - 1;
+            actVidas();
         }
         Destroy(other.gameObject);
     }
+
+    void actPuntos()
+    {
+        puntaje.text = "Puntaje: " + puntos;
+    }
+
+    void actVidas()
+    {
+        vidas.text = "Vidas: " + vida;
+    }
+   
 }
