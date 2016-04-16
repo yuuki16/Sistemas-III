@@ -18,10 +18,18 @@ public class Destroyer : MonoBehaviour
         }
         else
         {
-            vida = vida - 1;
-            vidas.text = "Vidas: " + vida;
+            if (other.gameObject.tag == "Food")
+            {
+                vida = vida - 1;
+                actVidas();
+            }
         }
         
         Destroy(other.gameObject);
+    }
+
+    void actVidas()
+    {
+        vidas.text = "Vidas: " + vida;
     }
 }

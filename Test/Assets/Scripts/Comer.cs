@@ -10,6 +10,8 @@ public class Comer : MonoBehaviour
     public AudioClip eatFoodClip;
     public float volume;
 
+    GameObject[] food;
+    GameObject[] fish;
     AudioSource source;
     int puntos;
     int vida;
@@ -38,6 +40,21 @@ public class Comer : MonoBehaviour
             source.PlayOneShot(eatFishClip, volume);
             vida = int.Parse(vidas.text.Substring(7)) - 1;
             actVidas();
+            if (vida == 0)
+            {
+                //destruir comida
+                food = GameObject.FindGameObjectsWithTag("Food");
+                for (int i = 0; i < food.Length; i++)
+                {
+                    Destroy(food[i]);
+                }
+                //destruir peces
+                fish = GameObject.FindGameObjectsWithTag("Fish");
+                for (int i = 0; i < fish.Length; i++)
+                {
+                    Destroy(fish[i]);
+                }
+            }
         }
         Destroy(other.gameObject);
     }

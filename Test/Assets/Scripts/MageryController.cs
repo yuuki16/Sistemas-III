@@ -12,9 +12,11 @@ public class MageryController : MonoBehaviour
     
     string direccionActual = "right";
     int stateActual = STATE_IDLE;
-    float maxAncho;
-	// Use this for initialization
-	void Start () 
+    float maxAncho, x;
+    Vector3 position;
+
+    public float duration = 10.0f;
+    void Start () 
 	{
         if (camara == null)
         {
@@ -27,29 +29,15 @@ public class MageryController : MonoBehaviour
         float MageryAncho = GetComponent<Renderer>().bounds.extents.x;
         maxAncho = ancho.x - MageryAncho;
     }
-	void FixedUpdate () 
+	void Update () 
 	{
-       //mover a Magery
-        Vector3 posicion = camara.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 posicionnueva = new Vector3(posicion.x, -3.66f, 0.0f);
-        float ancho = Mathf.Clamp(posicionnueva.x, -maxAncho, maxAncho); //que no se pase del tamaño de la pantalla
-        posicionnueva = new Vector3(ancho, posicionnueva.y, posicionnueva.y);
-        
-        //cambiar posición
-        if (posicionnueva.x > transform.position.x)
-        {
-            changeDirection("right");
-            changeState(STATE_RUN);
-        }
-        else if (posicionnueva.x < transform.position.x)
-        {
-            changeDirection("left");
-            changeState(STATE_RUN);
-        } else if (posicionnueva.x == transform.position.x) {
-            changeState(STATE_IDLE);
-        }
+        accelerometerMove();
+        position = Vector3.zero;
+        position.y = -3.66f;
+        position.z = -3.0f;
+        position.x = x;
 
-        GetComponent<Rigidbody2D>().MovePosition(posicionnueva);
+        transform.position = position;
     }
 
     void changeState(int pState)
@@ -84,5 +72,22 @@ public class MageryController : MonoBehaviour
                 direccionActual = "left";
             }
         }
+    }
+    
+    void accelerometerMove()
+    {
+        x = Input.acceleration.x;
+
+        if (x < 0) //left
+        {
+            changeState(STATE_RUN);
+            changeDirection("left");
+        }
+        else if(x > 0) //right
+        {
+            changeState(STATE_RUN);
+            changeDirection("right");
+        }
+
     }
 }
