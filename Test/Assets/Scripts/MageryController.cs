@@ -4,18 +4,16 @@ using System.Collections;
 public class MageryController : MonoBehaviour 
 {
     public Camera camara;
+    public float velocidad = 1.0f;
 
     Animator animator;
-    
     const int STATE_IDLE = 2;
     const int STATE_RUN = 1;
-    
     string direccionActual = "right";
     int stateActual = STATE_IDLE;
     float maxAncho, x;
     Vector3 position;
 
-    public float duration = 10.0f;
     void Start () 
 	{
         if (camara == null)
@@ -28,16 +26,26 @@ public class MageryController : MonoBehaviour
         Vector3 ancho = camara.ScreenToWorldPoint(esquinaSup);
         float MageryAncho = GetComponent<Renderer>().bounds.extents.x;
         maxAncho = ancho.x - MageryAncho;
+        
     }
 	void Update () 
 	{
-        accelerometerMove();
-        position = Vector3.zero;
-        position.y = -3.66f;
-        position.z = -3.0f;
-        position.x = x;
+        float rounded = Mathf.Round((transform.position.x) * 10.0f) / 10.0f;
+        if (Time.timeScale == 1)
+        {
 
-        transform.position = position;
+            accelerometerMove(rounded);
+            position = Vector3.zero;
+            position.y = -3.66f;
+            position.z = -3.0f;
+            position.x = x * velocidad;
+
+            if (position.x != transform.position.x)
+            {
+                transform.position = position;
+
+            }
+        }
     }
 
     void changeState(int pState)
@@ -73,20 +81,37 @@ public class MageryController : MonoBehaviour
             }
         }
     }
+
+    void moveLeft()
+    {
+        //rb.velocity = new Vector2(velocidad, 0);
+        changeState(STATE_RUN);
+        changeDirection("left");
+    }
+
+    void moveRight()
+    {
+        //rb.velocity = new Vector2(-velocidad, 0);
+        changeState(STATE_RUN);
+        changeDirection("right");
+    }
     
-    void accelerometerMove()
+    void accelerometerMove(float posicionvieja)
     {
         x = Input.acceleration.x;
-
-        if (x < 0) //left
+        float rounded = Mathf.Round((x* velocidad) * 10.0f) / 10.0f;
+        //Debug.Log("Vieja: "+posicionvieja+". Nueva: "+rounded);
+        if (rounded < posicionvieja) //left
         {
-            changeState(STATE_RUN);
-            changeDirection("left");
+            moveLeft();
         }
-        else if(x > 0) //right
+        else if(rounded > posicionvieja) //right
         {
-            changeState(STATE_RUN);
-            changeDirection("right");
+            moveRight();
+        }
+        else if(rounded == posicionvieja)
+        {
+            changeState(STATE_IDLE);
         }
 
     }

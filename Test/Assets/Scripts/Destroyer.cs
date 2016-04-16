@@ -7,6 +7,7 @@ public class Destroyer : MonoBehaviour
 
     public Text vidas;
     public int vida;
+    public Image[] Hearts;
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -31,5 +32,17 @@ public class Destroyer : MonoBehaviour
     void actVidas()
     {
         vidas.text = "Vidas: " + vida;
+        if (vida == 2)
+        {
+            Hearts[2].gameObject.SetActive(false);
+        }
+        else if (vida == 1)
+        {
+            Hearts[1].gameObject.SetActive(false);
+        }
+        else if (vida == 0)
+        {
+            Hearts[0].gameObject.SetActive(false);
+        }
     }
 }

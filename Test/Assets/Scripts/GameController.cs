@@ -9,6 +9,8 @@ public class GameController : MonoBehaviour
     public Text vidas;
     public GameObject gameOverText;
     public GameObject restartButton;
+    public GameObject pauseButton;
+    public Image[] Hearts;
 
     private float maxAncho;
     private GameObject[] food;
@@ -27,6 +29,11 @@ public class GameController : MonoBehaviour
         Vector3 ancho = camara.ScreenToWorldPoint(esquinaSup);
         float bentoAncho = objects[0].GetComponent<Renderer>().bounds.extents.x;
         maxAncho = ancho.x - bentoAncho;
+        pauseButton.SetActive(true);
+        for (int i = 0; i < Hearts.Length; i++)
+        {
+            Hearts[i].gameObject.SetActive(true);
+        }
         StartCoroutine(Spawn());
     }
 	
@@ -63,10 +70,22 @@ public class GameController : MonoBehaviour
             Destroy(fish[i]);
         }
 
-        //yield return new WaitForSeconds(2.0f);
+        pauseButton.SetActive(false);
         gameOverText.SetActive(true);
         yield return new WaitForSeconds(1.0f);
         restartButton.SetActive(true);
+    }
+
+    public void Pause()
+    {
+        if (Time.timeScale == 1)
+        {
+            Time.timeScale = 0;
+        }
+        else if(Time.timeScale == 0)
+        {
+            Time.timeScale = 1;
+        }
     }
 }
 

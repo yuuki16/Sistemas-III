@@ -13,11 +13,11 @@ public class Menu : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-        exit = exit.GetComponent<Canvas>();
-        play = play.GetComponent<Button>();
-        quit = quit.GetComponent<Button>();
+ //       exit = exit.GetComponent<Canvas>();
+ //       play = play.GetComponent<Button>();
+ //       quit = quit.GetComponent<Button>();
 
-        exit.enabled = false;
+ //       exit.enabled = false;
 	}
 	
     public void exitPress()

@@ -4,11 +4,12 @@ using UnityEngine.UI;
 
 public class Comer : MonoBehaviour 
 {
-    public Text puntaje;
+    public Text score;
     public Text vidas;
     public AudioClip eatFishClip;
     public AudioClip eatFoodClip;
     public float volume;
+    public Image[] Hearts;
 
     GameObject[] food;
     GameObject[] fish;
@@ -18,7 +19,7 @@ public class Comer : MonoBehaviour
     int valor;
     void Start()
     {
-        puntos = 0;
+        puntos = int.Parse(score.text);
         valor = 1;
         actPuntos();
     }
@@ -42,6 +43,7 @@ public class Comer : MonoBehaviour
             actVidas();
             if (vida == 0)
             {
+                Hearts[0].gameObject.SetActive(false);
                 //destruir comida
                 food = GameObject.FindGameObjectsWithTag("Food");
                 for (int i = 0; i < food.Length; i++)
@@ -55,18 +57,27 @@ public class Comer : MonoBehaviour
                     Destroy(fish[i]);
                 }
             }
+            else if(vida == 2)
+            {
+                Hearts[2].gameObject.SetActive(false);
+            }
+            else if(vida == 1)
+            {
+                Hearts[1].gameObject.SetActive(false);
+            }
         }
         Destroy(other.gameObject);
     }
 
     void actPuntos()
     {
-        puntaje.text = "Puntaje: " + puntos;
+        score.text = puntos.ToString();
     }
 
     void actVidas()
     {
         vidas.text = "Vidas: " + vida;
+        
     }
    
 }
