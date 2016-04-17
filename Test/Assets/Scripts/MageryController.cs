@@ -4,7 +4,8 @@ using System.Collections;
 public class MageryController : MonoBehaviour 
 {
     public Camera camara;
-    public float velocidad = 1.0f;
+    public float velocidad = 2.0f;
+    public AccelerationEvent accEvent;
 
     Animator animator;
     const int STATE_IDLE = 2;
@@ -12,7 +13,8 @@ public class MageryController : MonoBehaviour
     string direccionActual = "right";
     int stateActual = STATE_IDLE;
     float maxAncho, x;
-    Vector3 position;
+    Vector3 position, defaultAcc, pantalla;
+    Rigidbody2D rb;
 
     void Start () 
 	{
@@ -21,29 +23,35 @@ public class MageryController : MonoBehaviour
             camara = Camera.main;
         }
         animator = this.GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
+        defaultAcc = new Vector3(Input.acceleration.x, -3.66f, -3.0f);
         //tamaño de la pantalla
-        Vector3 esquinaSup = new Vector3(Screen.width, Screen.height, 0.0f);
-        Vector3 ancho = camara.ScreenToWorldPoint(esquinaSup);
+        pantalla = new Vector3(Screen.width, Screen.height, 0.0f);
+        Vector3 ancho = camara.ScreenToWorldPoint(pantalla);
         float MageryAncho = GetComponent<Renderer>().bounds.extents.x;
         maxAncho = ancho.x - MageryAncho;
-        
     }
 	void Update () 
 	{
-        float rounded = Mathf.Round((transform.position.x) * 10.0f) / 10.0f;
+        Vector3 acceleration = new Vector3(Input.acceleration.x, -3.66f, -3.0f);
+        acceleration -= defaultAcc;
         if (Time.timeScale == 1)
         {
-
-            accelerometerMove(rounded);
-            position = Vector3.zero;
-            position.y = -3.66f;
-            position.z = -3.0f;
-            position.x = x * velocidad;
-
-            if (position.x != transform.position.x)
+            //si es una fuerza mayor
+            if (acceleration.sqrMagnitude >= 0.03f)
             {
-                transform.position = position;
-
+                Vector3 newPosition = transform.position + acceleration;
+                //que no sobrepase el ancho de la pantalla
+                if (newPosition.x < maxAncho && newPosition.x > -maxAncho)
+                {
+                    rb.AddForce(transform.forward * Time.deltaTime);
+                    accelerometerMove(transform.position.x, newPosition.x);
+                    transform.position = newPosition;
+                }
+            }
+            else
+            {
+                changeState(STATE_IDLE);
             }
         }
     }
@@ -84,35 +92,25 @@ public class MageryController : MonoBehaviour
 
     void moveLeft()
     {
-        //rb.velocity = new Vector2(velocidad, 0);
         changeState(STATE_RUN);
         changeDirection("left");
     }
 
     void moveRight()
     {
-        //rb.velocity = new Vector2(-velocidad, 0);
         changeState(STATE_RUN);
         changeDirection("right");
     }
     
-    void accelerometerMove(float posicionvieja)
+    void accelerometerMove(float oldX, float newX)
     {
-        x = Input.acceleration.x;
-        float rounded = Mathf.Round((x* velocidad) * 10.0f) / 10.0f;
-        //Debug.Log("Vieja: "+posicionvieja+". Nueva: "+rounded);
-        if (rounded < posicionvieja) //left
+        if (newX < oldX) //left
         {
             moveLeft();
         }
-        else if(rounded > posicionvieja) //right
+        else if(newX > oldX) //right
         {
             moveRight();
         }
-        else if(rounded == posicionvieja)
-        {
-            changeState(STATE_IDLE);
-        }
-
     }
 }

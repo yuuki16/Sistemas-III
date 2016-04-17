@@ -5,34 +5,35 @@ using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour 
 {
-    public Canvas exit;
-    public Button play;
-    public Button quit;
+    public Canvas exit, about;
+    public Button btPlay, btQuit, btAbout, btConfig;
 
-
+    int language;
 	// Use this for initialization
 	void Start () 
 	{
         exit = exit.GetComponent<Canvas>();
-        play = play.GetComponent<Button>();
-        quit = quit.GetComponent<Button>();
+        btPlay = btPlay.GetComponent<Button>();
+        btQuit = btQuit.GetComponent<Button>();
 
+        if (PlayerPrefs.HasKey("Language"))
+        {
+            language = PlayerPrefs.GetInt("Language");
+        }
         exit.enabled = false;
+        about.enabled = false;
 	}
 	
     public void exitPress()
     {
         exit.enabled = true;
-        play.enabled = false;
-        quit.enabled = false;
-
+        controlsControl(false);
     }
 
     public void noPress()
     {
         exit.enabled = false;
-        play.enabled = true;
-        quit.enabled = true;
+        controlsControl(true);
     }
 
     public void StartGame()
@@ -44,4 +45,30 @@ public class Menu : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void showAbout()
+    {
+        about.enabled = true;
+        controlsControl(false);
+    }
+
+    public void returnFromAbout()
+    {
+        about.enabled = false;
+        controlsControl(true);
+    }
+
+    public void showSettings()
+    {
+        SceneManager.LoadScene("Settings");
+    }
+
+    void controlsControl(bool status)
+    {
+        btPlay.enabled = status;
+        btConfig.enabled = status;
+        btAbout.enabled = status;
+        btQuit.enabled = status;
+    }
+
 }
