@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<multilanguage>
+
+  <language>
+    <name>English</name>
+    <btPlay>Play</btPlay>
+    <txtSalir>Exit</txtSalir>
+    <txtNo>No</txtNo>
+    <txtYes>Yes</txtYes>
+    <txtDeveloped>Developed by: Michelle M.</txtDeveloped>
+    <txtVersion>Version: 2.0</txtVersion>
+    <txtScoreTitle>Score: </txtScoreTitle>
+    <txtBestScoreTitle>Best Score: </txtBestScoreTitle>
+    <txtGameOver>Game Over</txtGameOver>
+    <txtRestart>Restart</txtRestart>
+  </language>
+
+  <language>
+    <name>Japanese</name>
+    <btPlay>遊ぶ</btPlay>
+    <txtSalir>出口</txtSalir>
+    <txtNo>いいえ</txtNo>
+    <txtYes>はい</txtYes>
+    <txtDeveloped>Michelle M. が開発しました</txtDeveloped>
+    <txtVersion>バージョン: 2.0</txtVersion>
+    <txtScoreTitle>スコア: </txtScoreTitle>
+    <txtBestScoreTitle>最高のスコア: </txtBestScoreTitle>
+    <txtGameOver>ゲームオーバー</txtGameOver>
+    <txtRestart>再起動</txtRestart>
+  </language>
+</multilanguage>

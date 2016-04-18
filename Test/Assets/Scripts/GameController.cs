@@ -2,26 +2,73 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour 
 {
     public Camera camara;
     public GameObject[] objects;
-    public Text vidas, scoreText, bestScoreText;
+    public Text vidas, scoreText, bestScoreText, txtScoreTitle, txtBestScoreTitle, txtGameOver;
     public GameObject gameOverText, restartButton, pauseButton, musicPlayer;
     public Image[] Hearts;
-    public AudioSource audioSource;
     public AudioClip gameMusic, gameOver;
+    public LanguageController languageController;
+    public Button btRestart;
 
-    private float maxAncho;
+    private float maxAncho, volume;
     private GameObject[] food;
     private GameObject[] fish;
 
-    int vida = 3, score = 0, bestScore = 0;
+    int vida = 3, score = 0, bestScore = 0, language;
+    string strValue;
     GameObject objeto;
+    AudioSource audioSource;
+    Dictionary<string, string> langContent = new Dictionary<string, string>();
     // Use this for initialization
     void Start () 
 	{
+        //destroy last music
+        if (GameObject.FindGameObjectWithTag("Music"))
+        {
+            DestroyObject(GameObject.FindGameObjectWithTag("Music"));
+        }
+        
+
+        //set music volume
+        if (PlayerPrefs.HasKey("CurrVol"))
+        {
+            volume = PlayerPrefs.GetFloat("CurrVol");
+        }
+        else
+        {
+            volume = 1.0f;
+        }
+        audioSource = musicPlayer.GetComponent<AudioSource>();
+        audioSource.clip = gameMusic;
+        audioSource.volume = volume;
+        //set language controllers
+        if (PlayerPrefs.HasKey("Language"))
+        {
+            language = PlayerPrefs.GetInt("Language");
+        }
+        else
+        {
+            language = 0;
+        }
+        langContent = languageController.languageChange(language);
+        //ScoreTitle Text
+        langContent.TryGetValue("txtScoreTitle", out strValue);
+        txtScoreTitle.text = strValue;
+        //BestScoreTitle Text
+        langContent.TryGetValue("txtBestScoreTitle", out strValue);
+        txtBestScoreTitle.text = strValue;
+        //Game Over Text
+        langContent.TryGetValue("txtGameOver", out strValue);
+        txtGameOver.text = strValue;
+        //Restart Button
+        langContent.TryGetValue("txtRestart", out strValue);
+        btRestart.GetComponentInChildren<Text>().text = strValue;
+
         if (camara == null)
         {
             camara = Camera.main;
@@ -59,7 +106,7 @@ public class GameController : MonoBehaviour
     IEnumerator Spawn()
     {
         
-        yield return new WaitForSeconds(2.0f);//tiempo de espera para spawnear
+        //yield return new WaitForSeconds(2.0f);//tiempo de espera para spawnear
 
         while (vida > 0)
         {

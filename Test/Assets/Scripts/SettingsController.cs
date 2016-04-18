@@ -23,8 +23,11 @@ public class SettingsController : MonoBehaviour
         }
 
         ddLanguage.value = language;
-    }
-	
+
+       
+    }  
+    
+    
     public void returnHome()
     {
         SceneManager.LoadScene("Menu");
